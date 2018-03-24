@@ -1,0 +1,26 @@
+{% extends "ask_zinovyev_app/layout.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Регистрация</title>
+{% endblock %}
+
+{% block content %}
+    <h2>Регистрация</h2><br>
+
+    {% with label_col_width="3" item_col_width="5" %}
+        <form>
+            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-login" label_text="Логин" input_type="text" %}
+            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-email" label_text="Email" input_type="email" %}
+            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-nickname" label_text="Псевдоним" input_type="text" %}
+            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-password" label_text="Пароль" input_type="password" %}
+            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-password-confirmation" label_text="Подтверждение" input_type="password" %}
+            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-avatar" label_text="Аватар" input_type="file" %}
+            {% include "ask_zinovyev_app/user-info-form-button-template.html" with button_id="register-user" button_text="Зарегистрироваться" %}
+
+        </form>
+    {% endwith %}
+    <br>
+
+    <a href="/login">Уже зарегистрированы?</a>
+{% endblock %}
