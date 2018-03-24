@@ -1,0 +1,22 @@
+{% extends "ask_zinovyev_app/layout.html" %}
+{% load static %}
+
+{% block title %}
+    <title><!--Здесь заголовок вопроса-->Вопрос</title>
+{% endblock %}
+
+{% block content %}
+    <br><br>
+    {% include "ask_zinovyev_app/question-template.html" %}
+    <hr>
+
+    {% for i in "123" %}
+        {% include "ask_zinovyev_app/answer-template.html" %}<br>
+    {% endfor %}
+
+    <form>
+        <textarea class="form-control" id="answer-text" rows="10" placeholder="Ваш ответ..."></textarea><br>
+        <button type="submit" class="btn btn-success">Ответить</button>
+    </form>
+
+{% endblock %}

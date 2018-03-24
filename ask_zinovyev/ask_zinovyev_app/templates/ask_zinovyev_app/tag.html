@@ -1,0 +1,18 @@
+{% extends "ask_zinovyev_app/layout.html" %}
+{% load static %}
+
+{% block title %}
+    <title><!--Здесь имя тега-->Диплом</title>
+{% endblock %}
+
+{% block content %}
+    <h2>Поиск по тегу: Диплом</h2>
+    <br><br>
+
+    {% for i in "12345" %}
+        {% include "ask_zinovyev_app/question-template.html" %}
+    {% endfor %}
+
+    <br><br><br>
+    {% include "ask_zinovyev_app/pagination-template.html" %}
+{% endblock %}
