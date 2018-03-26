@@ -1,11 +1,14 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
+from django.views.decorators.http import require_GET
 
 
+@require_GET
 def index(request):
     return redirect(questions)
 
 
+@require_GET
 def questions(request):
     try:
         page = int(request.GET.get('page'))
@@ -17,25 +20,31 @@ def questions(request):
                   {'page': paginator.page(page)})
 
 
+@require_GET
 def ask(request):
     return render(request, 'ask_zinovyev_app/ask.html')
 
 
+@require_GET
 def tag(request):
     return render(request, 'ask_zinovyev_app/questions-by-tag.html')
 
 
+@require_GET
 def question(request):
     return render(request, 'ask_zinovyev_app/question.html')
 
 
+@require_GET
 def register(request):
     return render(request, 'ask_zinovyev_app/register.html')
 
 
+@require_GET
 def login(request):
     return render(request, 'ask_zinovyev_app/login.html')
 
 
+@require_GET
 def settings(request):
     return render(request, 'ask_zinovyev_app/settings.html')
