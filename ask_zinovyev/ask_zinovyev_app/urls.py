@@ -4,7 +4,7 @@ from ask_zinovyev_app import views
 
 urlpatterns = [
     path('', views.index, name='ask_zinovyev_app/index'),
-    path('questions', views.questions, name='ask/zinovyev_app/questions'),
+    path('questions', views.questions, name='ask_zinovyev_app/questions'),
     re_path(r'^questions/(?P<page>[0-9]{7})/$', views.questions, name='ask_zinovyev_app/questions'),
     path('ask', views.ask, name='ask_zinovyev_app/ask'),
     path('tag', views.tag, name='ask_zinovyev_app/tag'),
