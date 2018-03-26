@@ -1,5 +1,6 @@
 {% extends "ask_zinovyev_app/layout.html" %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block title %}
     <title>Список вопросов</title>
@@ -15,5 +16,5 @@
     {% endfor %}
 
     <br><br><br>
-    {% include "ask_zinovyev_app/pagination-template.html" %}
+    {% bootstrap_pagination page %}
 {% endblock %}

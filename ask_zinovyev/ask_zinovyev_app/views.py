@@ -1,8 +1,20 @@
-from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect
 
 
 def index(request):
-    return render(request, 'ask_zinovyev_app/questions.html')
+    return redirect(questions)
+
+
+def questions(request):
+    try:
+        page = int(request.GET.get('page'))
+    except:
+        page = 1
+    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    paginator = Paginator(lst, 5)
+    return render(request, 'ask_zinovyev_app/questions.html',
+                  {'page': paginator.page(page)})
 
 
 def ask(request):
