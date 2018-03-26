@@ -11,7 +11,7 @@ def questions(request):
         page = int(request.GET.get('page'))
     except:
         page = 1
-    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] * 10000
     paginator = Paginator(lst, 5)
     return render(request, 'ask_zinovyev_app/questions.html',
                   {'page': paginator.page(page)})
