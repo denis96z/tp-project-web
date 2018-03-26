@@ -13,7 +13,7 @@ def questions(request):
         page = 1
     lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] * 10000
     paginator = Paginator(lst, 5)
-    return render(request, 'ask_zinovyev_app/questions.html',
+    return render(request, 'ask_zinovyev_app/questions-all.html',
                   {'page': paginator.page(page)})
 
 
@@ -22,7 +22,7 @@ def ask(request):
 
 
 def tag(request):
-    return render(request, 'ask_zinovyev_app/tag.html')
+    return render(request, 'ask_zinovyev_app/questions-by-tag.html')
 
 
 def question(request):
