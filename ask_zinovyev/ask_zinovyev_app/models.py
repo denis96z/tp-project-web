@@ -19,11 +19,24 @@ class Publication(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_time_added = models.DateTimeField(default=datetime.now)
     tags = models.ManyToManyField(Tag, blank=True)
-    rating = models.IntegerField()
+    rate = models.IntegerField()
     is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-date_time_added']
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pub = models.ForeignKey(Publication, on_delete=models.CASCADE)
+    value = models.BooleanField(verbose_name='True if like, False if dislike')
+
+    def save(self, *args, **kwargs):
+        super(Rating, self).save(*args, **kwargs)
+        self.pub.rate += 1 if self.value else -1
+
+    class Meta:
+        unique_together = ('user', 'pub')
 
 
 class Question(Publication):
