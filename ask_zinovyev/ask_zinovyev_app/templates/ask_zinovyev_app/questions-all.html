@@ -11,7 +11,7 @@
     <a href="#"><h4>Самые популярные</h4></a>
     <br>
 
-    {% for i in "12345" %}
+    {% for question in page.object_list %}
         {% include "ask_zinovyev_app/question-template.html" %}
         <br>
     {% endfor %}

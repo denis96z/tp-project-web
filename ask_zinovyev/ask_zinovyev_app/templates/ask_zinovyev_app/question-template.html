@@ -5,7 +5,10 @@
         <div class="col-md-2">
             <br>
             <div class="text-center">
-                <img class="rounded-circle center-block" style="height:50px" src="{% static "ask_zinovyev_app/img/question.jpg" %}"><br>
+                {% if question.author.avatar %}
+                    <img class="rounded-circle center-block" style="height:50px"
+                        src="{{ question.author.avatar.url }}"><br>
+                {% endif %}
             </div>
             <br>
             {% include "ask_zinovyev_app/rating-template.html" %}
@@ -13,13 +16,16 @@
         </div>
         <div class="col-offset-md-2 col-md-8">
             <br>
-            <a href="#"><h4>Как написать диплом за 2 дня?</h4></a>
-            <b>Добавил:</b> Никнейм&emsp;<b>Дата:</b> 01.01.2000<br><br>
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            <a href="#"><h4>{{ question.title }}</h4></a>
+            <b>Добавил:</b> {{ question.author.username }}&emsp;<b>Дата:</b> {{ question.date_time_added }}<br><br>
+                {{ question.description }}
             <br><br>
-            <b>Всего ответов: 3</b>&emsp;<b>Теги:</b>
-            <a href="#">Учёба</a>
-            <a href="#">Диплом</a>
+            <b>Всего ответов: -</b>&emsp;<b>Теги:</b>
+            {% for tag in question.tags.all %}
+                <a href="#">{{ tag }}</a>
+            {% empty %}
+                -
+            {% endfor %}
             <br><br>
         </div>
     </div>
