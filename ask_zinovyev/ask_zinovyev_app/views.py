@@ -16,11 +16,11 @@ def parse_page(request):
         raise Http404
 
 
-def parse_ordering(ordering):
+def get_order_and_template(ordering):
     if (ordering is None) or ordering == 'recent':
-        return '-date_time_added'
+        return '-date_time_added', 'ask_zinovyev_app/recent-questions.html'
     elif ordering == 'popular':
-        return '-rating'
+        return '-rating', 'ask_zinovyev_app/popular-questions.html'
     else:
         raise Http404
 
@@ -40,10 +40,11 @@ def get_index(request):
 
 @require_GET
 def get_all_questions(request, ordering):
-    p, order = parse_page(request), parse_ordering(ordering)
+    p = parse_page(request)
+    order, template = get_order_and_template(ordering)
     questions = Question.objects.filter(is_active=True).order_by(order)
     page_objects = get_current_page(questions, p)
-    return render(request, 'ask_zinovyev_app/questions-all.html', {'page': page_objects})
+    return render(request, template, {'page': page_objects})
 
 
 @require_GET

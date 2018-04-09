@@ -1,0 +1,6 @@
+{% extends "ask_zinovyev_app/all-questions.html" %}
+
+{% block filter %}
+    <h2>Последние вопросы</h2>
+    <a href="{% url "ask_zinovyev_app/questions" "popular" %}"><h4>Самые популярные</h4></a>
+{% endblock %}

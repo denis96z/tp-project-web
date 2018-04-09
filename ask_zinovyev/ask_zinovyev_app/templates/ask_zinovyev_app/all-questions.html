@@ -7,8 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Последние вопросы</h2>
-    <a href="#"><h4>Самые популярные</h4></a>
+    {% block filter %}{% endblock %}
     <br>
 
     {% for question in page.object_list %}
