@@ -1,4 +1,4 @@
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
@@ -6,37 +6,54 @@ from django.views.decorators.http import require_GET
 from ask_zinovyev_app.models import Question
 
 
-@require_GET
-def index(request):
-    return redirect(all_questions)
-
-
-@require_GET
-def all_questions(request):
+def parse_page(request):
     try:
-        page = int(request.GET.get('page'))
-    except:
-        page = 1
+        p = request.GET.get('page')
+        if not (p is None):
+            return int(p)
+        return 1
+    except ValueError:
+        raise Http404
 
-    questions_list = Question.objects.all()
-    paginator = Paginator(questions_list, 5)
 
+def parse_ordering(ordering):
+    if (ordering is None) or ordering == 'recent':
+        return '-date_time_added'
+    elif ordering == 'popular':
+        return '-rating'
+    else:
+        raise Http404
+
+
+def get_current_page(objects, index):
     try:
-        return render(request,
-                      'ask_zinovyev_app/questions-all.html',
-                      {'page': paginator.page(page)})
-    except:
-        return Http404
+        paginator = Paginator(objects, 20)
+        return paginator.page(index)
+    except InvalidPage:
+        raise Http404
+
+
+@require_GET
+def get_index(request):
+    return redirect(get_all_questions, ordering='recent')
+
+
+@require_GET
+def get_all_questions(request, ordering):
+    p, order = parse_page(request), parse_ordering(ordering)
+    questions = Question.objects.filter(is_active=True).order_by(order)
+    page_objects = get_current_page(questions, p)
+    return render(request, 'ask_zinovyev_app/questions-all.html', {'page': page_objects})
+
+
+@require_GET
+def get_questions_by_tag(request):
+    return render(request, 'ask_zinovyev_app/questions-by-tag.html')
 
 
 @require_GET
 def ask(request):
     return render(request, 'ask_zinovyev_app/ask.html')
-
-
-@require_GET
-def tag(request):
-    return render(request, 'ask_zinovyev_app/questions-by-tag.html')
 
 
 @require_GET
