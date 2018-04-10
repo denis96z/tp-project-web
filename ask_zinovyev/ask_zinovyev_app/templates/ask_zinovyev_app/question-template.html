@@ -20,7 +20,7 @@
         </div>
         <div class="col-offset-md-2 col-md-8">
             <br>
-            <a href="{% url "ask_zinovyev_app/question" question_id=question.pk %}"><h4>{{ question.title }}</h4></a>
+            <a href="{% url "ask_zinovyev_app/question" question.pk %}"><h4>{{ question.title }}</h4></a>
             <b>Добавил:</b> {{ question.user.username }}&emsp;<b>Дата:</b> {{ question.date_time_added }}<br><br>
             {{ question.description }}
             <br><br>

@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
 
-from ask_zinovyev_app.models import Question, Tag
+from ask_zinovyev_app.models import Question, Tag, Answer
 
 
 def parse_page(request):
@@ -28,6 +28,13 @@ def get_order_and_template(ordering):
 def get_tag(id):
     try:
         return Tag.objects.get(pk=id)
+    except (Tag.DoesNotExist, Tag.MultipleObjectsReturned):
+        raise Http404
+
+
+def get_question(id):
+    try:
+        return Question.objects.get(pk=id)
     except (Tag.DoesNotExist, Tag.MultipleObjectsReturned):
         raise Http404
 
@@ -69,12 +76,12 @@ def ask(request):
 
 
 @require_GET
-def question(request, question_id):
-    question_info = Question.objects.filter(publication_ptr_id=question_id)
-    if question_info:
-        return render(request, 'ask_zinovyev_app/question.html', {'question': question_info})
-    else:
-        return Http404
+def question(request, id):
+    p = parse_page(request)
+    q = get_question(id)
+    answers = Answer.objects.filter(is_active=True, question__pk=id)
+    page_objects = get_current_page(answers, p)
+    return render(request, 'ask_zinovyev_app/question.html', {'question': q, 'answers': page_objects})
 
 
 @require_GET

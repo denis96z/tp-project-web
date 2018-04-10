@@ -43,12 +43,12 @@ class QuestionRating(models.Model):
     date_time_modified = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
 
     def save(self, *args, **kwargs):
-        super(QuestionRating, self).save(*args, **kwargs)
         self.question.rating += 1 if self.is_like else -1
+        super(QuestionRating, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        super(QuestionRating, self).delete(*args, **kwargs)
         self.question.rating += 1 if self.is_like else -1
+        super(QuestionRating, self).delete(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Рейтинг вопроса'
@@ -66,13 +66,13 @@ class Answer(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='Отображается на сайте')
 
     def save(self, *args, **kwargs):
-        super(Answer, self).save(*args, **kwargs)
         if not self.pk:
             self.question.num_answers += 1
+        super(Answer, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        super(Answer, self).delete(*args, **kwargs)
         self.question.num_answers -= 1
+        super(Answer, self).delete(*args, **kwargs)
 
     def __str__(self):
         return self.question.title + '(' + str(self.pk) + ')'
@@ -90,12 +90,12 @@ class AnswerRating(models.Model):
     date_time_modified = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
 
     def save(self, *args, **kwargs):
-        super(AnswerRating, self).save(*args, **kwargs)
         self.answer.rating += 1 if self.is_like else -1
+        super(AnswerRating, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        super(AnswerRating, self).delete(*args, **kwargs)
         self.answer.rating += 1 if self.is_like else -1
+        super(AnswerRating, self).delete(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Рейтинг ответа'
