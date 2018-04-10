@@ -3,15 +3,20 @@
 <div class="container">
     <div class="row border border-gray">
         <div class="col-md-2">
+            <br>
             <div class="text-center">
                 <img class="rounded-circle center-block" src="{% static "ask_zinovyev_app/img/question.jpg" %}" style="height:50px"><br>
             </div>
+            <br>
             {% with rating_value=answer.rating %}
                 {% include "ask_zinovyev_app/rating-template.html" %}
             {% endwith %}
+            <br>
         </div>
         <div class="col-offset-md-2 col-md-8">
-            <b>Ответил:</b> {{ answer.user.username }}&emsp;<b>Дата:</b> {{ answer.date_time_added }}<br>
+            <br>
+            <b>Ответил:</b> {{ answer.user.username }}&emsp;<b>Дата:</b> {{ answer.date_time_added }}
+            <br><br>
             {{ answer.description }}
             <br>
             <div class="form-check">
