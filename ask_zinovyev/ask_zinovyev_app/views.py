@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_GET
 
 from ask_zinovyev_app.models import Question, Tag, Answer
@@ -22,20 +22,6 @@ def get_order_and_template(ordering):
     elif ordering == 'popular':
         return '-rating', 'ask_zinovyev_app/popular-questions.html'
     else:
-        raise Http404
-
-
-def get_tag(id):
-    try:
-        return Tag.objects.get(pk=id)
-    except (Tag.DoesNotExist, Tag.MultipleObjectsReturned):
-        raise Http404
-
-
-def get_question(id):
-    try:
-        return Question.objects.get(pk=id)
-    except (Tag.DoesNotExist, Tag.MultipleObjectsReturned):
         raise Http404
 
 
@@ -64,7 +50,7 @@ def get_all_questions(request, ordering):
 @require_GET
 def get_questions_by_tag(request, id):
     p = parse_page(request)
-    tag = get_tag(id)
+    tag = get_object_or_404(Tag, pk=id)
     questions = Question.objects.filter(is_active=True, tags__pk=id)
     page_objects = get_current_page(questions, p)
     return render(request, 'ask_zinovyev_app/questions-by-tag.html', {'tag': tag, 'page': page_objects})
@@ -78,7 +64,7 @@ def ask(request):
 @require_GET
 def question(request, id):
     p = parse_page(request)
-    q = get_question(id)
+    q = get_object_or_404(Question, pk=id)
     answers = Answer.objects.filter(is_active=True, question__pk=id)
     page_objects = get_current_page(answers, p)
     return render(request, 'ask_zinovyev_app/question.html', {'question': q, 'answers': page_objects})
