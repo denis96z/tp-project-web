@@ -1,7 +1,6 @@
 from django.urls import path
 from ask_zinovyev_app import views
 
-
 urlpatterns = [
     path('', views.get_index, name='ask_zinovyev_app/index'),
     path('questions/<slug:ordering>', views.get_all_questions, name='ask_zinovyev_app/questions'),

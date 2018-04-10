@@ -45,10 +45,12 @@ class QuestionRating(models.Model):
     def save(self, *args, **kwargs):
         self.question.rating += 1 if self.is_like else -1
         super(QuestionRating, self).save(*args, **kwargs)
+        self.question.save()
 
     def delete(self, *args, **kwargs):
         self.question.rating += 1 if self.is_like else -1
         super(QuestionRating, self).delete(*args, **kwargs)
+        self.question.save()
 
     class Meta:
         verbose_name = 'Рейтинг вопроса'
@@ -68,11 +70,13 @@ class Answer(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.question.num_answers += 1
+            self.question.save()
         super(Answer, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         self.question.num_answers -= 1
         super(Answer, self).delete(*args, **kwargs)
+        self.question.save()
 
     def __str__(self):
         return self.question.title + '(' + str(self.pk) + ')'
@@ -92,10 +96,12 @@ class AnswerRating(models.Model):
     def save(self, *args, **kwargs):
         self.answer.rating += 1 if self.is_like else -1
         super(AnswerRating, self).save(*args, **kwargs)
+        self.answer.save()
 
     def delete(self, *args, **kwargs):
         self.answer.rating += 1 if self.is_like else -1
         super(AnswerRating, self).delete(*args, **kwargs)
+        self.answer.save()
 
     class Meta:
         verbose_name = 'Рейтинг ответа'
