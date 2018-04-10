@@ -5,24 +5,28 @@
         <div class="col-md-2">
             <br>
             <div class="text-center">
-                {% if question.author.avatar %}
-                    <img class="rounded-circle center-block" style="height:50px"
-                        src="{{ question.author.avatar.url }}"><br>
+                {% if question.user.avatar %}
+                    <img class="rounded-circle center-block" style="height:50px" src="{{ question.user.avatar.url }}">
+                {% else %}
+                    <img class="rounded-circle center-block" style="height:50px" src="{% static "ask_zinovyev_app/img/question.jpg" %}">
                 {% endif %}
+                <br>
             </div>
             <br>
-            {% include "ask_zinovyev_app/rating-template.html" %}
+            {% with rating_value=question.rating %}
+                {% include "ask_zinovyev_app/rating-template.html" %}
+            {% endwith %}
             <br>
         </div>
         <div class="col-offset-md-2 col-md-8">
             <br>
-            <a href="#"><h4>{{ question.title }}</h4></a>
-            <b>Добавил:</b> {{ question.author.username }}&emsp;<b>Дата:</b> {{ question.date_time_added }}<br><br>
-                {{ question.description }}
+            <a href="{% url "ask_zinovyev_app/question" question_id=question.pk %}"><h4>{{ question.title }}</h4></a>
+            <b>Добавил:</b> {{ question.user.username }}&emsp;<b>Дата:</b> {{ question.date_time_added }}<br><br>
+            {{ question.description }}
             <br><br>
-            <b>Всего ответов: -</b>&emsp;<b>Теги:</b>
+            <b>Всего ответов: {{ question.num_answers }}</b>&emsp;<b>Теги:</b>
             {% for tag in question.tags.all %}
-                <a href="#">{{ tag }}</a>
+                <a href="{% url "ask_zinovyev_app/tag" tag.pk %}">{{ tag }}</a>
             {% empty %}
                 -
             {% endfor %}

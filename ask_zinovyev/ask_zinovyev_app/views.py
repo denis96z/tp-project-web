@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
 
-from ask_zinovyev_app.models import Question
+from ask_zinovyev_app.models import Question, Tag
 
 
 def parse_page(request):
@@ -22,6 +22,13 @@ def get_order_and_template(ordering):
     elif ordering == 'popular':
         return '-rating', 'ask_zinovyev_app/popular-questions.html'
     else:
+        raise Http404
+
+
+def get_tag(id):
+    try:
+        return Tag.objects.get(pk=id)
+    except (Tag.DoesNotExist, Tag.MultipleObjectsReturned):
         raise Http404
 
 
@@ -48,8 +55,12 @@ def get_all_questions(request, ordering):
 
 
 @require_GET
-def get_questions_by_tag(request):
-    return render(request, 'ask_zinovyev_app/questions-by-tag.html')
+def get_questions_by_tag(request, id):
+    p = parse_page(request)
+    tag = get_tag(id)
+    questions = Question.objects.filter(is_active=True, tags__pk=id)
+    page_objects = get_current_page(questions, p)
+    return render(request, 'ask_zinovyev_app/questions-by-tag.html', {'tag': tag, 'page': page_objects})
 
 
 @require_GET

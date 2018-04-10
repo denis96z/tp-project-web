@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    <title><!--Здесь заголовок вопроса-->Вопрос</title>
+    <title>{{ question.title }}</title>
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
     {% include "ask_zinovyev_app/question-template.html" %}
     <hr>
 
-    {% for i in "123" %}
+    {% for answer in answers %}
         {% include "ask_zinovyev_app/answer-template.html" %}<br>
     {% endfor %}
 

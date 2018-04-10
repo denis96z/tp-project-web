@@ -13,6 +13,9 @@
     {% for question in page.object_list %}
         {% include "ask_zinovyev_app/question-template.html" %}
         <br>
+    {% empty %}
+        В данном разделе пока нет вопросов.
+        <br>
     {% endfor %}
 
     <br>

@@ -6,15 +6,19 @@
             <div class="text-center">
                 <img class="rounded-circle center-block" src="{% static "ask_zinovyev_app/img/question.jpg" %}" style="height:50px"><br>
             </div>
-            {% include "ask_zinovyev_app/rating-template.html" %}
+            {% with rating_value=answer.rating %}
+                {% include "ask_zinovyev_app/rating-template.html" %}
+            {% endwith %}
         </div>
         <div class="col-offset-md-2 col-md-8">
-            <b>Ответ от:</b> Никнейм&emsp;<b>Дата:</b> 01.01.2000<br>
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            <b>Ответил:</b> {{ answer.user.username }}&emsp;<b>Дата:</b> {{ answer.date_time_added }}<br>
+            {{ answer.description }}
             <br>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="correct-answer">
-                <label class="form-check-label" for="correct-answer"><b>Верный ответ</b></label>
+                {% if answer.is_correct %}
+                    <input class="form-check-input" type="checkbox" value="" id="correct-answer">
+                    <label class="form-check-label" for="correct-answer"><b>Верный ответ</b></label>
+                {% endif %}
             </div>
         </div>
     </div>
