@@ -17,15 +17,43 @@ class Tag(models.Model):
         verbose_name_plural = 'Теги'
 
 
-class Question(models.Model):
-    title = models.CharField(max_length=100, verbose_name='Заголовок')
+class Publication(models.Model):
     description = models.TextField(blank=True, verbose_name='Описание')
-    tags = models.ManyToManyField(Tag, verbose_name='Теги')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     date_time_added = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления', editable=False)
     rating = models.IntegerField(default=0, verbose_name='Рейтинг', editable=False)
-    num_answers = models.PositiveIntegerField(default=0, verbose_name='Количество ответов', editable=False)
     is_active = models.BooleanField(default=True, verbose_name='Отображается на сайте')
+
+    class Meta:
+        abstract = True
+        ordering = ['-date_time_added', '-rating']
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, verbose_name='Публикация')
+    is_like = models.BooleanField(default=True, verbose_name='Понравилось')
+    date_time_modified = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
+
+    def save(self, *args, **kwargs):
+        super(Rating, self).save(*args, **kwargs)
+        self.publication.rating += 1 if self.is_like else -1
+        self.publication.save()
+
+    def delete(self, *args, **kwargs):
+        self.publication.rating += 1 if self.is_like else -1
+        self.publication.save()
+        super(Rating, self).delete(*args, **kwargs)
+
+    class Meta:
+        abstract = True
+        unique_together = ('user', 'publication')
+
+
+class Question(Publication):
+    title = models.CharField(max_length=100, verbose_name='Заголовок')
+    tags = models.ManyToManyField(Tag, verbose_name='Теги')
+    num_answers = models.PositiveIntegerField(default=0, verbose_name='Количество ответов', editable=False)
 
     def __str__(self):
         return self.title
@@ -33,39 +61,19 @@ class Question(models.Model):
     class Meta:
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
-        ordering = ['-date_time_added', '-rating']
 
 
-class QuestionRating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='Вопрос')
-    is_like = models.BooleanField(default=True, verbose_name='Понравилось')
-    date_time_modified = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
-
-    def save(self, *args, **kwargs):
-        self.question.rating += 1 if self.is_like else -1
-        super(QuestionRating, self).save(*args, **kwargs)
-        self.question.save()
-
-    def delete(self, *args, **kwargs):
-        self.question.rating += 1 if self.is_like else -1
-        super(QuestionRating, self).delete(*args, **kwargs)
-        self.question.save()
+class QuestionRating(Rating):
+    publication = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='Вопрос')
 
     class Meta:
         verbose_name = 'Рейтинг вопроса'
         verbose_name_plural = 'Рейтинги вопросов'
-        unique_together = ('user', 'question')
 
 
-class Answer(models.Model):
+class Answer(Publication):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='Вопрос')
-    description = models.TextField(blank=True, verbose_name='Описание')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
-    date_time_added = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления', editable=False)
-    rating = models.IntegerField(default=0, verbose_name='Рейтинг', editable=False)
     is_correct = models.BooleanField(default=False, verbose_name='Правильный ответ', editable=False)
-    is_active = models.BooleanField(default=True, verbose_name='Отображается на сайте')
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -75,35 +83,20 @@ class Answer(models.Model):
 
     def delete(self, *args, **kwargs):
         self.question.num_answers -= 1
-        super(Answer, self).delete(*args, **kwargs)
         self.question.save()
+        super(Answer, self).delete(*args, **kwargs)
 
     def __str__(self):
-        return self.question.title + '(' + str(self.pk) + ')'
+        return self.question.title + ':' + str(self.pk) + ')'
 
     class Meta:
         verbose_name = 'Ответ'
         verbose_name_plural = 'Ответы'
-        ordering = ['-date_time_added', '-rating']
 
 
-class AnswerRating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, verbose_name='Ответ')
-    is_like = models.BooleanField(default=True, verbose_name='Понравилось')
-    date_time_modified = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
-
-    def save(self, *args, **kwargs):
-        self.answer.rating += 1 if self.is_like else -1
-        super(AnswerRating, self).save(*args, **kwargs)
-        self.answer.save()
-
-    def delete(self, *args, **kwargs):
-        self.answer.rating += 1 if self.is_like else -1
-        super(AnswerRating, self).delete(*args, **kwargs)
-        self.answer.save()
+class AnswerRating(Rating):
+    publication = models.ForeignKey(Answer, on_delete=models.CASCADE, verbose_name='Ответ')
 
     class Meta:
         verbose_name = 'Рейтинг ответа'
         verbose_name_plural = 'Рейтинги ответов'
-        unique_together = ('user', 'answer')
