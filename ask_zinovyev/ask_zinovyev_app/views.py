@@ -64,7 +64,7 @@ def ask(request):
 @require_GET
 def question(request, id):
     p = parse_page(request)
-    q = get_object_or_404(Question, pk=id)
+    q = get_object_or_404(Question, is_active=True, pk=id)
     answers = Answer.objects.filter(is_active=True, question__pk=id)
     page_objects = get_current_page(answers, p)
     return render(request, 'ask_zinovyev_app/question.html', {'question': q, 'answers': page_objects})
