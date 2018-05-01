@@ -6,9 +6,9 @@
             <br>
             <div class="text-center">
                 {% if question.user.avatar %}
-                    <img class="rounded-circle center-block" style="height:50px; width:50px" src="{{ question.user.avatar.url }}">
+                    <img class="rounded-circle center-block user-avatar-big" src="{{ question.user.avatar.url }}">
                 {% else %}
-                    <img class="rounded-circle center-block" style="height:50px; width:50px" src="{% static "ask_zinovyev_app/img/question.jpg" %}">
+                    <img class="rounded-circle center-block user-avatar-big" src="{% static "ask_zinovyev_app/img/question.jpg" %}">
                 {% endif %}
                 <br>
             </div>

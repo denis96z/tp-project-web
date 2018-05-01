@@ -5,7 +5,11 @@
         <div class="col-md-2">
             <br>
             <div class="text-center">
-                <img class="rounded-circle center-block" src="{% static "ask_zinovyev_app/img/question.jpg" %}" style="height:50px"><br>
+                {% if answer.user.avatar %}
+                    <img class="rounded-circle center-block user-avatar-big" src="{{ answer.user.avatar.url }}">
+                {% else %}
+                    <img class="rounded-circle center-block user-avatar-big" src="{% static "ask_zinovyev_app/img/question.jpg" %}">
+                {% endif %}
             </div>
             <br>
             {% with rating_value=answer.rating %}

@@ -11,6 +11,7 @@
 
     {% bootstrap_css %}
     {% fa_css %}
+    <link rel="stylesheet" href="{% static "ask_zinovyev_app/css/layout.css" %}">
 
     {% block title %}{% endblock %}
 </head>
@@ -30,7 +31,7 @@
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-menu-button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img src="{% static "ask_zinovyev_app/img/question.jpg" %}" class="rounded-circle" style="height:30px">
+                    <img class="rounded-circle user-avatar-small" src="{% static "ask_zinovyev_app/img/question.jpg" %}">
                     <b>Имя пользователя</b>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
@@ -69,6 +70,6 @@
         </div>
     </footer>
 
-    {% bootstrap_javascript jquery="full" %}
+    {% bootstrap_javascript jquery="slim" %}
 </body>
 </html>
