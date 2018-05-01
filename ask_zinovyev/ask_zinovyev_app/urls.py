@@ -13,8 +13,8 @@ urlpatterns = [
     path('question/<int:question_id>', views.get_question, name='ask_zinovyev_app/question'),
     path('question/ask', views.ask, name='ask_zinovyev_app/ask'),
 
-    path('sign-up', views.register, name='ask_zinovyev_app/sign_up'),
-    path('sign-in', views.login, name='ask_zinovyev_app/sign_in'),
+    path('sign-up', views.sign_up, name='ask_zinovyev_app/sign_up'),
+    path('sign-in', views.sign_in, name='ask_zinovyev_app/sign_in'),
 
     path('profile/<int:user_id>',views.view_profile, name='ask_zinovyev_app/profile'),
     path('profile/edit', views.edit_profile, name='ask_zinovyev_app/edit_profile'),

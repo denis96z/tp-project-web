@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator, InvalidPage
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_GET, require_POST, require_http_methods
+from django.views.decorators.http import require_GET, require_http_methods
 
 from ask_zinovyev_app.models import Question, Tag, Answer, get_active_or_404
 
@@ -60,7 +60,7 @@ def get_questions(request, questions, template):
     return render(request, template, {'page': p})
 
 
-@require_GET
+@require_http_methods(['GET', 'POST'])
 def ask(request):
     return render(request, 'ask_zinovyev_app/ask.html')
 
@@ -74,21 +74,33 @@ def get_question(request, question_id):
     return render(request, 'ask_zinovyev_app/question.html', {'question': q, 'answers': page_objects})
 
 
-@require_GET
-def register(request):
-    return render(request, 'ask_zinovyev_app/register.html')
+@require_http_methods(['GET', 'POST'])
+def sign_up(request):
+    if request.method == 'GET':
+        return render(request, 'ask_zinovyev_app/register.html')
+    else:
+        raise NotImplementedError
 
 
-@require_GET
-def login(request):
-    return render(request, 'ask_zinovyev_app/login.html')
+@require_http_methods(['GET', 'POST'])
+def sign_in(request):
+    if request.method == 'GET':
+        return render(request, 'ask_zinovyev_app/login.html')
+    else:
+        raise NotImplementedError
 
 
 @require_GET
 def view_profile(request, user_id):
-    return render(request, 'ask_zinovyev_app/layout.html')
+    if request.method == 'GET':
+        return render(request, 'ask_zinovyev_app/layout.html')
+    else:
+        raise NotImplementedError
 
 
 @require_http_methods(['GET', 'POST'])
 def edit_profile(request):
-    return render(request, 'ask_zinovyev_app/settings.html')
+    if request.method == 'GET':
+        return render(request, 'ask_zinovyev_app/settings.html')
+    else:
+        raise NotImplementedError
