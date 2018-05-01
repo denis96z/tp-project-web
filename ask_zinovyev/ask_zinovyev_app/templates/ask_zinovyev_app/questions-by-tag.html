@@ -2,5 +2,5 @@
 
 {% block filter %}
     <h2>Вопросы по тегу: {{ tag }}</h2>
-    <a href="{% url "ask_zinovyev_app/questions" "recent" %}"><h4>Самые последние</h4></a>
+    <a href="{% url "ask_zinovyev_app/recent_questions" %}"><h4>Самые последние</h4></a>
 {% endblock %}

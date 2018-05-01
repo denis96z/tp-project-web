@@ -26,7 +26,7 @@
             <br><br>
             <b>Всего ответов: {{ question.num_answers }}</b>&emsp;<b>Теги:</b>
             {% for tag in question.tags.all %}
-                <a href="{% url "ask_zinovyev_app/tag" tag.pk %}">{{ tag }}</a>
+                <a href="{% url "ask_zinovyev_app/questions_by_tag" tag.pk %}">{{ tag }}</a>
             {% empty %}
                 -
             {% endfor %}

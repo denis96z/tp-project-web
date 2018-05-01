@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.http import Http404
 
 
 class User(AbstractUser):
@@ -15,6 +16,17 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
+
+
+class PublicationManager(models.Manager):
+    def active(self):
+        return super().get_queryset().filter(is_active=True)
+
+    def popular(self):
+        return self.active().order_by('-rating')
+
+    def recent(self):
+        return self.active().order_by('-date_time_added')
 
 
 class Publication(models.Model):
@@ -50,10 +62,17 @@ class Rating(models.Model):
         unique_together = ('user', 'publication')
 
 
+class QuestionManager(PublicationManager):
+    def by_tag(self, tag_id):
+        return self.active().filter(tags__pk=tag_id)
+
+
 class Question(Publication):
     title = models.CharField(max_length=100, verbose_name='Заголовок')
     tags = models.ManyToManyField(Tag, verbose_name='Теги')
     num_answers = models.PositiveIntegerField(default=0, verbose_name='Количество ответов', editable=False)
+
+    objects = QuestionManager()
 
     def __str__(self):
         return self.title
@@ -71,9 +90,16 @@ class QuestionRating(Rating):
         verbose_name_plural = 'Рейтинги вопросов'
 
 
+class AnswerManager(PublicationManager):
+    def by_question(self, question_id):
+        return self.active().filter(question__pk=question_id)
+
+
 class Answer(Publication):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='Вопрос')
     is_correct = models.BooleanField(default=False, verbose_name='Правильный ответ', editable=False)
+
+    objects = AnswerManager()
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -100,3 +126,10 @@ class AnswerRating(Rating):
     class Meta:
         verbose_name = 'Рейтинг ответа'
         verbose_name_plural = 'Рейтинги ответов'
+
+
+def get_active_or_404(model, **kwargs):
+    try:
+        return model.objects.active().get(**kwargs)
+    except model.DoesNotExist:
+        raise Http404
