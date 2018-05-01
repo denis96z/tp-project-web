@@ -50,21 +50,22 @@ def get_recent_questions(request):
 
 @require_GET
 def get_questions_by_tag(request, tag_id):
-    p = parse_page(request)
     tag = get_object_or_404(Tag, pk=tag_id)
     questions = Question.objects.by_tag(tag_id)
-    page_objects = get_current_page(questions, p)
-    return render(request, 'ask_zinovyev_app/questions-by-tag.html', {'tag': tag, 'page': page_objects})
+    return get_questions(request, questions, 'ask_zinovyev_app/questions-by-tag.html', tag=tag)
 
 
-def get_questions(request, questions, template):
+def get_questions(request, questions, template, **kwargs):
     p = get_current_page(questions, parse_page(request))
-    return render(request, template, {'page': p})
+    return render(request, template, {'page': p, **kwargs})
 
 
 @require_http_methods(['GET', 'POST'])
 def ask(request):
-    return render(request, 'ask_zinovyev_app/ask.html')
+    if request.method == 'GET':
+        return render(request, 'ask_zinovyev_app/ask.html')
+    else:
+        raise NotImplementedError
 
 
 @require_GET
@@ -102,10 +103,7 @@ def sign_out(request):
 
 @require_GET
 def view_profile(request, user_id):
-    if request.method == 'GET':
-        return render(request, 'ask_zinovyev_app/layout.html')
-    else:
-        raise NotImplementedError
+    raise NotImplementedError
 
 
 @require_http_methods(['GET', 'POST'])
