@@ -1,8 +1,10 @@
+from django.contrib.auth import logout
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_GET, require_http_methods
+from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
+from ask_zinovyev.http import Http401
 from ask_zinovyev_app.models import Question, Tag, Answer, get_active_or_404
 
 
@@ -90,6 +92,14 @@ def sign_in(request):
         raise NotImplementedError
 
 
+@require_POST
+def sign_out(request):
+    if not request.user.is_authenticated:
+        return Http401
+    logout(request)
+    return redirect(get_index)
+
+
 @require_GET
 def view_profile(request, user_id):
     if request.method == 'GET':
@@ -101,6 +111,8 @@ def view_profile(request, user_id):
 @require_http_methods(['GET', 'POST'])
 def edit_profile(request):
     if request.method == 'GET':
+        if not request.user.is_authenticated:
+            return Http401
         return render(request, 'ask_zinovyev_app/settings.html')
     else:
         raise NotImplementedError

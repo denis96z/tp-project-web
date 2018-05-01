@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('sign-up', views.sign_up, name='ask_zinovyev_app/sign_up'),
     path('sign-in', views.sign_in, name='ask_zinovyev_app/sign_in'),
+    path('sign-out', views.sign_out, name='ask_zinovyev_app/sign_out'),
 
     path('profile/<int:user_id>',views.view_profile, name='ask_zinovyev_app/profile'),
     path('profile/edit', views.edit_profile, name='ask_zinovyev_app/edit_profile'),
