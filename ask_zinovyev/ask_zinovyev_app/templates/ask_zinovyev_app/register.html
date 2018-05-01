@@ -17,10 +17,9 @@
             {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-password-confirmation" label_text="Подтверждение" input_type="password" %}
             {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-avatar" label_text="Аватар" input_type="file" %}
             {% include "ask_zinovyev_app/user-info-form-button-template.html" with button_id="register-user" button_text="Зарегистрироваться" %}
-
         </form>
     {% endwith %}
     <br>
 
-    <a href="/login">Уже зарегистрированы?</a>
+    <a href="{% url "ask_zinovyev_app/sign_in" %}">Уже зарегистрированы?</a>
 {% endblock %}
