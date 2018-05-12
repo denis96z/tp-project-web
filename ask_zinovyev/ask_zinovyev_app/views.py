@@ -58,7 +58,6 @@ def get_questions_by_tag(request, tag_id):
 def get_questions(request, questions, template, **kwargs):
     p = get_current_page(questions, parse_page(request))
     return render(request, template, {
-        'user': request.user,
         'page': p, **kwargs
     })
 
@@ -68,10 +67,13 @@ def ask(request):
     if request.method == 'GET':
         if not request.user.is_authenticated:
             raise Http404
-        form = QuestionForm()
-        return render(request, 'ask_zinovyev_app/ask.html', {'form': form})
+        form = QuestionForm(request.user)
     else:
-        raise NotImplementedError
+        form = QuestionForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(get_index)
+    return render(request, 'ask_zinovyev_app/ask.html', {'form': form})
 
 
 @require_GET
