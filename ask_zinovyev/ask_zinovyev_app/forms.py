@@ -1,11 +1,10 @@
-from django.forms import ModelForm
-from django.db import models
+from django import forms
 
 from ask_zinovyev_app.models import Question
 
 
-class QuestionForm(ModelForm):
-    tags = models.TextField(blank=False, verbose_name='Теги, перечисленные через пробел')
+class QuestionForm(forms.ModelForm):
+    tags = forms.CharField(label='Теги', max_length=100)
 
     class Meta:
         model = Question

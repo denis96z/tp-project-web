@@ -64,7 +64,7 @@ class Rating(models.Model):
 
 class QuestionManager(PublicationManager):
     def by_tag(self, tag_id):
-        return self.active().filter(tags__pk=tag_id)
+        return self.active().filter(tags__pk=tag_id).order_by('-date_time_added')
 
 
 class Question(Publication):
@@ -92,7 +92,7 @@ class QuestionRating(Rating):
 
 class AnswerManager(PublicationManager):
     def by_question(self, question_id):
-        return self.active().filter(question__pk=question_id)
+        return self.active().filter(question__pk=question_id).order_by('-date_time_added')
 
 
 class Answer(Publication):

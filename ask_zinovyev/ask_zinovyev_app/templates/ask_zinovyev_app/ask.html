@@ -12,21 +12,24 @@
         <form action="{% url "ask_zinovyev_app/ask" %}" method="post">
             {% csrf_token %}
             <div class="form-group row">
-                <label for="question-title" class="col-sm-2 col-form-label"><b>Заголовок</b></label>
+                <label for="{{ form.title.id_for_label }}" class="col-sm-2 col-form-label"><b>Заголовок</b></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="question-title" placeholder="{{ form.title }}">
+                     <input type="text" class="form-control" id="{{ form.title.id_for_label }}"
+                            placeholder="{{ form.title.value|default_if_none:"" }}" required>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="question-text" class="col-sm-2 col-form-label"><b>Комментарий</b></label>
+                <label for="{{ form.description.id_for_label }}" class="col-sm-2 col-form-label"><b>Комментарий</b></label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" id="question-text" rows="10" placeholder="{{ form.description }}"></textarea>
+                    <textarea class="form-control" id="form.description.id_for_label" rows="10"
+                              placeholder="{{ form.description.value|default_if_none:"" }}"></textarea>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="question-tags" class="col-sm-2 col-form-label"><b>Теги</b></label>
+                <label for="{{ form.tags.id_for_label }}" class="col-sm-2 col-form-label"><b>Теги</b></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="question-tags" placeholder="{{ form.tags }}">
+                    <input type="text" class="form-control" id="{{ form.tags.id_for_label }}"
+                           placeholder="{{ form.tags.value|default_if_none:"" }}">
                 </div>
             </div>
             <div class="form-group row">
