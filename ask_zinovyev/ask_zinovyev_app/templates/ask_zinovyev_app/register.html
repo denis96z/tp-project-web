@@ -9,7 +9,8 @@
     <h2>Регистрация</h2><br>
 
     {% with label_col_width="3" item_col_width="5" %}
-        <form>
+        <form action="{% url "ask_zinovyev_app/sign_up" %}" method="post">
+            {% csrf_token %}
             {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-login" label_text="Логин" input_type="text" %}
             {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-email" label_text="Email" input_type="email" %}
             {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-nickname" label_text="Псевдоним" input_type="text" %}

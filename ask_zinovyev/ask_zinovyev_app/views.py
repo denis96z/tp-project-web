@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from ask_zinovyev.http import Http401
+from ask_zinovyev_app.forms import QuestionForm
 from ask_zinovyev_app.models import Question, Tag, Answer, get_active_or_404
 
 
@@ -57,13 +58,19 @@ def get_questions_by_tag(request, tag_id):
 
 def get_questions(request, questions, template, **kwargs):
     p = get_current_page(questions, parse_page(request))
-    return render(request, template, {'page': p, **kwargs})
+    return render(request, template, {
+        'user': request.user,
+        'page': p, **kwargs
+    })
 
 
 @require_http_methods(['GET', 'POST'])
 def ask(request):
     if request.method == 'GET':
-        return render(request, 'ask_zinovyev_app/ask.html')
+        if not request.user.is_authenticated:
+            return Http401
+        form = QuestionForm()
+        return render(request, 'ask_zinovyev_app/ask.html', {'form': form})
     else:
         raise NotImplementedError
 

@@ -20,25 +20,40 @@
         <div class="container">
             <a class="navbar-brand" href="{% url "ask_zinovyev_app/index" %}"><h1>Ask-Zinovyev</h1></a>
             <form class="form-inline">
-                <input class="form-control mr-sm-4" type="search" placeholder="Поиск..." aria-label="search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Найти</button>
+                <span>
+                    <input class="form-control mr-sm-4" type="search" placeholder="Поиск..." aria-label="search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Найти</button>
+                </span>
             </form>
 
-            <a href="{% url "ask_zinovyev_app/ask" %}">
-                <button class="btn btn-info">Задать вопрос</button>
-            </a>
-
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-menu-button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle user-avatar-small" src="{% static "ask_zinovyev_app/img/question.jpg" %}">
-                    <b>Имя пользователя</b>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
-                    <a class="dropdown-item" href="{% url "ask_zinovyev_app/edit_profile" %}">Настройки</a>
-                    <a class="dropdown-item" href="#">Выход</a>
+            {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-menu-button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if user.avatar %}
+                            <img class="rounded-circle user-avatar-small" src="{{ user.avatar.url }}">
+                        {% else %}
+                            <img class="rounded-circle user-avatar-small" src="{% static "ask_zinovyev_app/img/question.jpg" %}">
+                        {% endif %}
+                        <b>{{ user.username }}</b>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
+                        <a class="dropdown-item" href="{% url "ask_zinovyev_app/ask" %}">Новый вопрос</a>
+                        <a class="dropdown-item" href="{% url "ask_zinovyev_app/edit_profile" %}">Настройки</a>
+                        <a class="dropdown-item" href="#">Выход</a>
+                    </div>
                 </div>
-            </div>
+            {% else %}
+                <span>
+                    <a href="{% url "ask_zinovyev_app/sign_in" %}">
+                        <button class="btn btn-info">Вход</button>
+                    </a>
+
+                    <a href="{% url "ask_zinovyev_app/sign_up" %}">
+                        <button class="btn btn-info">Регистрация</button>
+                    </a>
+                </span>
+            {% endif %}
         </div>
     </nav>
 

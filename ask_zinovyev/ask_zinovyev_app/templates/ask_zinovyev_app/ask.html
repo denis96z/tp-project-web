@@ -9,23 +9,24 @@
     <h2>Ваш вопрос</h2><br>
 
     {% block new-question %}
-        <form>
+        <form action="{% url "ask_zinovyev_app/ask" %}" method="post">
+            {% csrf_token %}
             <div class="form-group row">
                 <label for="question-title" class="col-sm-2 col-form-label"><b>Заголовок</b></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="question-title">
+                    <input type="text" class="form-control" id="question-title" placeholder="{{ form.title }}">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="question-text" class="col-sm-2 col-form-label"><b>Комментарий</b></label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" id="question-text" rows="10"></textarea>
+                    <textarea class="form-control" id="question-text" rows="10" placeholder="{{ form.description }}"></textarea>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="question-tags" class="col-sm-2 col-form-label"><b>Теги</b></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="question-tags">
+                    <input type="text" class="form-control" id="question-tags" placeholder="{{ form.tags }}">
                 </div>
             </div>
             <div class="form-group row">
