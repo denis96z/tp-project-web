@@ -14,8 +14,9 @@
         {% include "ask_zinovyev_app/answer-template.html" %}<br>
     {% endfor %}
 
-    <form>
-        <textarea class="form-control" id="answer-text" rows="10" placeholder="Ваш ответ..."></textarea><br>
+    <form action="{% url "ask_zinovyev_app/answer" question_id=question.pk %}" method="post">
+        {% csrf_token %}
+        <textarea class="form-control" name="description" rows="10" placeholder="Ваш ответ..."></textarea><br>
         <button type="submit" class="btn btn-success">Ответить</button>
     </form>
 

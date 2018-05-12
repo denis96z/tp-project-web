@@ -30,7 +30,7 @@ class PublicationManager(models.Manager):
 
 
 class Publication(models.Model):
-    description = models.TextField(blank=True, verbose_name='Описание')
+    description = models.TextField(blank=False, verbose_name='Описание')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     date_time_added = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления', editable=False)
     rating = models.IntegerField(default=0, verbose_name='Рейтинг', editable=False)

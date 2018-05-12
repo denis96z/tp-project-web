@@ -4,7 +4,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
-from ask_zinovyev_app.forms import QuestionForm
+from ask_zinovyev_app.forms import QuestionForm, AnswerForm
 from ask_zinovyev_app.models import Question, Tag, Answer, get_active_or_404
 
 
@@ -69,11 +69,15 @@ def ask(request):
             raise Http404
         form = QuestionForm(request.user)
     else:
+        if not request.user.is_authenticated:
+            raise Http404
         form = QuestionForm(request.user, request.POST)
         if form.is_valid():
             form.save()
             return redirect(get_index)
-    return render(request, 'ask_zinovyev_app/ask.html', {'form': form})
+    return render(request, 'ask_zinovyev_app/ask.html', {
+        'form': form
+    })
 
 
 @require_GET
@@ -82,7 +86,21 @@ def get_question(request, question_id):
     q = get_active_or_404(Question, pk=question_id)
     answers = Answer.objects.by_question(question_id)
     page_objects = get_current_page(answers, p)
-    return render(request, 'ask_zinovyev_app/question.html', {'question': q, 'answers': page_objects})
+    return render(request, 'ask_zinovyev_app/question.html', {
+        'question': q,
+        'answers': page_objects
+    })
+
+
+@require_POST
+def post_answer(request, question_id):
+    if not request.user.is_authenticated:
+        raise Http404
+    q = get_active_or_404(Question, pk=question_id)
+    form = AnswerForm(request.user, q, request.POST)
+    if form.is_valid():
+        form.save()
+    return redirect(get_question, question_id)
 
 
 @require_http_methods(['GET', 'POST'])
