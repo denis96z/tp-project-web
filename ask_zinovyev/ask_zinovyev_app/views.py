@@ -1,4 +1,5 @@
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -29,6 +30,29 @@ def get_current_page(objects, index):
 @require_GET
 def get_index(request):
     return redirect(get_recent_questions)
+
+
+@require_http_methods(['GET', 'POST'])
+def sign_in(request):
+    if request.method == 'GET':
+        return render(request, 'ask_zinovyev_app/login.html')
+    else:
+        raise NotImplementedError
+
+
+@require_http_methods(['GET', 'POST'])
+def sign_up(request):
+    if request.method == 'GET':
+        return render(request, 'ask_zinovyev_app/register.html')
+    else:
+        raise NotImplementedError
+
+
+@require_GET
+@login_required(redirect_field_name=sign_in)
+def sign_out(request):
+    logout(request)
+    return redirect(get_index)
 
 
 @require_GET
@@ -63,14 +87,11 @@ def get_questions(request, questions, template, **kwargs):
 
 
 @require_http_methods(['GET', 'POST'])
+@login_required(redirect_field_name=sign_in)
 def ask(request):
     if request.method == 'GET':
-        if not request.user.is_authenticated:
-            raise Http404
         form = QuestionForm(request.user)
     else:
-        if not request.user.is_authenticated:
-            raise Http404
         form = QuestionForm(request.user, request.POST)
         if form.is_valid():
             form.save()
@@ -93,36 +114,13 @@ def get_question(request, question_id):
 
 
 @require_POST
+@login_required(redirect_field_name=sign_in)
 def post_answer(request, question_id):
-    if not request.user.is_authenticated:
-        raise Http404
     q = get_active_or_404(Question, pk=question_id)
     form = AnswerForm(request.user, q, request.POST)
     if form.is_valid():
         form.save()
     return redirect(get_question, question_id)
-
-
-@require_http_methods(['GET', 'POST'])
-def sign_up(request):
-    if request.method == 'GET':
-        return render(request, 'ask_zinovyev_app/register.html')
-    else:
-        raise NotImplementedError
-
-
-@require_http_methods(['GET', 'POST'])
-def sign_in(request):
-    if request.method == 'GET':
-        return render(request, 'ask_zinovyev_app/login.html')
-    else:
-        raise NotImplementedError
-
-
-@require_POST
-def sign_out(request):
-    logout(request)
-    return redirect(get_index)
 
 
 @require_GET
@@ -131,10 +129,9 @@ def view_profile(request, user_id):
 
 
 @require_http_methods(['GET', 'POST'])
+@login_required(redirect_field_name=sign_in)
 def edit_profile(request):
     if request.method == 'GET':
-        if not request.user.is_authenticated:
-            raise Http404
         return render(request, 'ask_zinovyev_app/settings.html')
     else:
         raise NotImplementedError

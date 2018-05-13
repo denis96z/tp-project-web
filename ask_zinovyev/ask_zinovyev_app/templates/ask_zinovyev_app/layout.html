@@ -42,7 +42,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
                         <a class="dropdown-item" href="{% url "ask_zinovyev_app/ask" %}">Новый вопрос</a>
                         <a class="dropdown-item" href="{% url "ask_zinovyev_app/edit_profile" %}">Настройки</a>
-                        <a class="dropdown-item" href="#">Выход</a>
+                        <a class="dropdown-item" href="{% url "ask_zinovyev_app/sign_out" %}">Выход</a>
                     </div>
                 </div>
             {% else %}
