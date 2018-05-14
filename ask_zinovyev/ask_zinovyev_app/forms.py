@@ -1,6 +1,8 @@
 from django import forms
+from django.contrib.auth import authenticate, login
+from django.core.exceptions import NON_FIELD_ERRORS
 
-from ask_zinovyev_app.models import Question, Tag, Answer
+from ask_zinovyev_app.models import Question, Tag, Answer, User
 
 
 class QuestionForm(forms.ModelForm):
@@ -43,3 +45,19 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = ['description']
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    def sign_in(self, request):
+        if self.is_valid():
+            user = authenticate(request, username=self.cleaned_data['username'],
+                                password=self.cleaned_data['password'])
+            if user is not None:
+                login(request, user)
+                return True
+            else:
+                self.errors[''] = 'Неверный логин или пароль'
+        return False
