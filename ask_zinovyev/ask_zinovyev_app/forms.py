@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate, login
-from django.core.exceptions import NON_FIELD_ERRORS
 
-from ask_zinovyev_app.models import Question, Tag, Answer, User
+from ask_zinovyev_app.models import Question, Tag, Answer
 
 
 class QuestionForm(forms.ModelForm):
