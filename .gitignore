@@ -1,10 +1,20 @@
+# IDE
 .idea
+
+# virtualenv
 venv
 
+# python
 __pycache__
 *.pyc
 
+# database
 migrations
 !migrations/__init__.py
 
+# static files
 uploads
+ask_zinovyev/static/
+
+# nginx
+nginx.log
