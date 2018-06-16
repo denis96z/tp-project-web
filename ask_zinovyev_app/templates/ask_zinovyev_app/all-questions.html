@@ -10,7 +10,7 @@
     {% block filter %}{% endblock %}
     <br>
 
-    {% for question in page.object_list %}
+    {% for question in object_list %}
         {% include "ask_zinovyev_app/question-template.html" %}
         <br>
     {% empty %}
@@ -19,5 +19,5 @@
     {% endfor %}
 
     <br>
-    {% bootstrap_pagination page %}
+    {% bootstrap_pagination page_obj %}
 {% endblock %}
