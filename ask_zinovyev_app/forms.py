@@ -4,16 +4,22 @@ from django.contrib.auth import authenticate, login
 from ask_zinovyev_app.models import Question, Tag, Answer
 
 
-class QuestionForm(forms.ModelForm):
+class NewQuestionForm(forms.ModelForm):
+    __user = None
     tags = forms.CharField(label='Теги', max_length=100, required=False)
 
-    def __init__(self, user, *args, **kwargs):
-        super(QuestionForm, self).__init__(*args, **kwargs)
-        self.__user__ = user
+    def __init__(self, *args, **kwargs):
+        super(NewQuestionForm, self).__init__(*args, **kwargs)
+
+    def get_user(self):
+        return self.__user
+
+    def set_user(self, user):
+        self.__user = user
 
     def save(self, commit=True):
-        instance = super(QuestionForm, self).save(commit=False)
-        instance.user = self.__user__
+        instance = super(NewQuestionForm, self).save(commit=False)
+        instance.user = self.__user
         instance.save()
         for tag in str(self.data['tags']).split(' '):
             if tag == "":
@@ -44,19 +50,3 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = ['description']
-
-
-class LoginForm(forms.Form):
-    username = forms.CharField(max_length=150)
-    password = forms.CharField(widget=forms.PasswordInput)
-
-    def sign_in(self, request):
-        if self.is_valid():
-            user = authenticate(request, username=self.cleaned_data['username'],
-                                password=self.cleaned_data['password'])
-            if user is not None:
-                login(request, user)
-                return True
-            else:
-                self.errors[''] = 'Неверный логин или пароль'
-        return False
