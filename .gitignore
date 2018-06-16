@@ -1,20 +1,23 @@
-# IDE
+### PyCharm ###
 .idea
 
-# virtualenv
+### VirtualEnv ###
 venv
 
-# python
+### Python ###
 __pycache__
 *.pyc
 
-# database
+### Database ###
 migrations
 !migrations/__init__.py
 
-# static files
-uploads
-ask_zinovyev/static/
+### Static Files ###
+/uploads/
+/static/
 
-# nginx
+### Nginx ###
 nginx.log
+
+### Settings ###
+local_settings.py
