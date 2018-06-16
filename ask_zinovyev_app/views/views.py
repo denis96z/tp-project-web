@@ -54,19 +54,6 @@ def ask(request):
     })
 
 
-@require_GET
-def get_question(request, question_id):
-    pass
-    # p = parse_page(request)
-    # q = get_active_or_404(Question, pk=question_id)
-    # answers = Answer.objects.by_question(question_id)
-    # page_objects = get_current_page(answers, p)
-    # return render(request, 'ask_zinovyev_app/question.html', {
-    #     'question': q,
-    #     'answers': page_objects
-    # })
-
-
 @require_POST
 @login_required(redirect_field_name=sign_in)
 def post_answer(request, question_id):

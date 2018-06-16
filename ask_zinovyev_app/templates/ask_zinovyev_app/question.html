@@ -1,5 +1,6 @@
 {% extends "ask_zinovyev_app/layout.html" %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block title %}
     <title>{{ question.title }}</title>
@@ -8,11 +9,17 @@
 {% block content %}
     <br><br>
     {% include "ask_zinovyev_app/question-template.html" %}
-    <hr>
+    <br>
 
-    {% for answer in answers %}
-        {% include "ask_zinovyev_app/answer-template.html" %}<br>
-    {% endfor %}
+    {% if object_list %}
+        {% bootstrap_pagination page_obj %}
+        <br>
+
+        {% for answer in object_list %}
+            {% include "ask_zinovyev_app/answer-template.html" %}
+        {% endfor %}
+        <br>
+    {% endif %}
 
     <form action="{% url "ask_zinovyev_app/answer" question_id=question.pk %}" method="post">
         {% csrf_token %}

@@ -1,13 +1,11 @@
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, RedirectView
 
 from ask_zinovyev_app.models import Question, Tag
-from ask_zinovyev_app.views.views import PAGINATE_BY
 
 
 class QuestionsView(ListView):
-    paginate_by = PAGINATE_BY
+    paginate_by = 20
 
 
 class AllQuestionsView(RedirectView):
@@ -27,16 +25,10 @@ class PopularQuestionsView(QuestionsView):
 class QuestionsByTagView(QuestionsView):
     template_name = 'ask_zinovyev_app/questions-by-tag.html'
 
-    def get_tag(self):
-        try:
-            return int(self.request.GET['tag_id'])
-        except (KeyError, TypeError):
-            raise Http404
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tag'] = get_object_or_404(Tag, pk=self.get_tag())
+        context['tag'] = get_object_or_404(Tag, pk=self.kwargs['tag_id'])
         return context
 
     def get_queryset(self):
-        return Question.objects.by_tag(self.get_tag())
+        return Question.objects.by_tag(self.kwargs['tag_id'])
