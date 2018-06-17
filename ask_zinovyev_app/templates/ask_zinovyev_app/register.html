@@ -6,21 +6,61 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Регистрация</h2><br>
+    {% if user.is_authenticated %}
+        <br>
+        <h2>Вы авторизованы как {{ user.username }}</h2><br>
+        <a href="{% url "ask_zinovyev_app/sign_out" %}">Выйти из учетной записи?</a>
+    {% else %}
+        <h2>Регистрация</h2><br>
 
-    {% with label_col_width="3" item_col_width="5" %}
-        <form action="{% url "ask_zinovyev_app/sign_up" %}" method="post">
-            {% csrf_token %}
-            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-login" label_text="Логин" input_type="text" %}
-            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-email" label_text="Email" input_type="email" %}
-            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-nickname" label_text="Псевдоним" input_type="text" %}
-            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-password" label_text="Пароль" input_type="password" %}
-            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-password-confirmation" label_text="Подтверждение" input_type="password" %}
-            {% include "ask_zinovyev_app/user-info-form-text-input-template.html" with field_id="user-avatar" label_text="Аватар" input_type="file" %}
-            {% include "ask_zinovyev_app/user-info-form-button-template.html" with button_id="register-user" button_text="Зарегистрироваться" %}
-        </form>
-    {% endwith %}
-    <br>
-
-    <a href="{% url "ask_zinovyev_app/sign_in" %}">Уже зарегистрированы?</a>
+        {% with label_col_width="3" item_col_width="5" %}
+            <form action="{% url "ask_zinovyev_app/sign_up" %}" method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}<br>
+                <div class="form-group row">
+                    <div class="col-offset-sm-2">{{ form.username.errors }}</div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.username.id_for_label }}" class="col-sm-{{ label_col_width }} col-form-label"><b>Логин</b></label>
+                    <div class="col-sm-{{ item_col_width }}">
+                        <input type="text" class="form-control" name="username" id="{{ form.username.id_for_label }}" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-offset-sm-2">{{ form.email.errors }}</div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.email.id_for_label }}" class="col-sm-{{ label_col_width }} col-form-label"><b>Email</b></label>
+                    <div class="col-sm-{{ item_col_width }}">
+                        <input type="email" class="form-control" name="email" id="{{ form.email.id_for_label }}" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-offset-sm-2">{{ form.password1.errors }}</div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.password1.id_for_label }}" class="col-sm-{{ label_col_width }} col-form-label"><b>Пароль</b></label>
+                    <div class="col-sm-{{ item_col_width }}">
+                        <input type="password" class="form-control" name="password1" id="{{ form.password1.id_for_label }}" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-offset-sm-2">{{ form.password2.errors }}</div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.password2.id_for_label }}" class="col-sm-{{ label_col_width }} col-form-label"><b>Подтверждение пароля</b></label>
+                    <div class="col-sm-{{ item_col_width }}">
+                        <input type="password" class="form-control" name="password2" id="{{ form.password2.id_for_label }}" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-{{ label_col_width }} col-form-label"></label>
+                    <div class="col-sm-{{ item_col_width }}">
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                    </div>
+                </div>
+            </form>
+        {% endwith %}
+        <br><a href="{% url "ask_zinovyev_app/sign_in" %}">Уже зарегистрированы?</a>
+    {% endif %}
 {% endblock %}

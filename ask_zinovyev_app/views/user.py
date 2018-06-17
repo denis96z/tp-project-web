@@ -4,6 +4,21 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.decorators.http import require_GET
+from django.views.generic import CreateView
+
+from ask_zinovyev_app.forms import SignUpForm
+
+
+class SignUpView(CreateView):
+    form_class = SignUpForm
+    template_name = 'ask_zinovyev_app/register.html'
+
+    def form_valid(self, form):
+        form.set_request(self.request)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('ask_zinovyev_app/index')
 
 
 class SignInView(LoginView):

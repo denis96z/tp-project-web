@@ -1,14 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
-
-@require_http_methods(['GET', 'POST'])
-def sign_up(request):
-    if request.method == 'GET':
-        return render(request, 'ask_zinovyev_app/register.html')
-    else:
-        raise NotImplementedError
+from ask_zinovyev_app.forms import SignUpForm
 
 
 @require_POST

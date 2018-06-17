@@ -6,7 +6,7 @@ from ask_zinovyev_app.views.question import QuestionView, NewQuestionView
 from ask_zinovyev_app.views.questions import \
     AllQuestionsView, PopularQuestionsView,\
     RecentQuestionsView, QuestionsByTagView
-from ask_zinovyev_app.views.user import SignInView, sign_out
+from ask_zinovyev_app.views.user import SignInView, sign_out, SignUpView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='ask_zinovyev_app/index'),
@@ -20,7 +20,7 @@ urlpatterns = [
     path('question/<int:question_id>', QuestionView.as_view(), name='ask_zinovyev_app/question'),
     path('question/new', NewQuestionView.as_view(), name='ask_zinovyev_app/ask'),
 
-    path('sign-up', views.sign_up, name='ask_zinovyev_app/sign_up'),
+    path('sign-up', SignUpView.as_view(), name='ask_zinovyev_app/sign_up'),
     path('sign-in', SignInView.as_view(), name='ask_zinovyev_app/sign_in'),
     path('sign-out', sign_out, name='ask_zinovyev_app/sign_out'),
 

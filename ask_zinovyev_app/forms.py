@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 
 from ask_zinovyev_app.models import Question, Tag, Answer
 
@@ -22,7 +23,7 @@ class NewQuestionForm(forms.ModelForm):
         instance.user = self.__user
         instance.save()
         for tag in str(self.data['tags']).split(' '):
-            if tag == "":
+            if tag == '':
                 continue
             instance.tags.add(Tag.objects.get_or_create(label=tag)[0])
         if commit:
@@ -50,3 +51,22 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = ['description']
+
+
+class SignUpForm(UserCreationForm):
+    __request = None
+    email = forms.EmailField(label="Email")
+
+    def get_request(self):
+        return self.__request
+
+    def set_request(self, request):
+        self.__request = request
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+        login(self.__request, user)
+        return user

@@ -8,7 +8,7 @@
 {% block content %}
     {% if user.is_authenticated %}
         <br>
-        <h2>Выход</h2><br>
+        <h2>Вы авторизованы как {{ user.username }}</h2><br>
         <a href="{% url "ask_zinovyev_app/sign_out" %}">Выйти из учетной записи?</a>
     {% else %}
         <h2>Вход</h2><br>
