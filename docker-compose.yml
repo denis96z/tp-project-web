@@ -1,0 +1,28 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:latest
+    container_name: asknginx
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./web:/web
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+  web:
+    build: .
+    container_name: askweb
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn ask_zinovyev.wsgi -b 0.0.0.0:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./web:/web
+    expose:
+      - "8000"
+    
+  db:
+    image: postgres:latest
+    container_name: askdb
+    environment:
+      POSTGRES_DB: ask-zinovyev-db
